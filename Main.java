@@ -1,6 +1,7 @@
-// Main.java — Added profitData array and loadData implementation
 import java.io.*;
 import java.util.*;
+
+// Main.java — Implemented first 4 methods
 
 public class Main {
     static final int MONTHS = 12;
@@ -51,27 +52,92 @@ public class Main {
                 }
                 reader.close();
             } catch (IOException e) {
+                System.out.println("Error reading file: " + fileName);
             }
         }
     }
 
-    // ======== 10 REQUIRED METHODS ========
-
+    // ========== METHOD 1 ==========
     public static String mostProfitableCommodityInMonth(int month) {
-        return "DUMMY";
+        if (month < 0 || month >= MONTHS)
+            return "INVALID_MONTH";
+
+        int[] totals = new int[COMMS];
+
+        for (int d = 0; d < DAYS; d++) {
+            for (int c = 0; c < COMMS; c++) {
+                totals[c] += profitData[month][d][c];
+            }
+        }
+
+        int maxIndex = 0;
+        for (int c = 1; c < COMMS; c++) {
+            if (totals[c] > totals[maxIndex])
+                maxIndex = c;
+        }
+
+        return commodities[maxIndex] + " " + totals[maxIndex];
     }
 
+    // ========== METHOD 2 ==========
     public static int totalProfitOnDay(int month, int day) {
-        return 1234;
+        if (month < 0 || month >= MONTHS || day < 1 || day > DAYS)
+            return -99999;
+
+        int total = 0;
+
+        for (int c = 0; c < COMMS; c++) {
+            total += profitData[month][day - 1][c];
+        }
+        return total;
     }
 
+    // ========== METHOD 3 ==========
     public static int commodityProfitInRange(String commodity, int from, int to) {
-        return 1234;
+        int commIndex = -1;
+        for (int c = 0; c < COMMS; c++) {
+            if (commodities[c].equals(commodity)) {
+                commIndex = c;
+                break;
+            }
+        }
+
+        if (commIndex == -1 || from < 1 || from > DAYS || to < 1 || to > DAYS || from > to) {
+            return -99999;
+        }
+
+        int total = 0;
+
+        for (int m = 0; m < MONTHS; m++) {
+            for (int d = from - 1; d < to; d++) {
+                total += profitData[m][d][commIndex];
+            }
+        }
+        return total;
     }
 
+    // ========== METHOD 4 ==========
     public static int bestDayOfMonth(int month) {
-        return 1234;
+        if (month < 0 || month >= MONTHS)
+            return -1;
+
+        int maxDay = 0;
+        int maxProfit = Integer.MIN_VALUE;
+
+        for (int d = 0; d < DAYS; d++) {
+            int dayTotal = 0;
+            for (int c = 0; c < COMMS; c++) {
+                dayTotal += profitData[month][d][c];
+            }
+            if (dayTotal > maxProfit) {
+                maxProfit = dayTotal;
+                maxDay = d + 1;
+            }
+        }
+        return maxDay;
     }
+
+    // ========== METHODS 5-10 (not implemented yet) ==========
 
     public static String bestMonthForCommodity(String comm) {
         return "DUMMY";
