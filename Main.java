@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.*;
 
-// Main.java — Implemented first 4 methods
+// Main.java — Implemented methods 5-7
 
 public class Main {
     static final int MONTHS = 12;
@@ -137,19 +137,90 @@ public class Main {
         return maxDay;
     }
 
-    // ========== METHODS 5-10 (not implemented yet) ==========
-
+    // ========== METHOD 5 ==========
     public static String bestMonthForCommodity(String comm) {
-        return "DUMMY";
+        int commIndex = -1;
+        for (int c = 0; c < COMMS; c++) {
+            if (commodities[c].equals(comm)) {
+                commIndex = c;
+                break;
+            }
+        }
+
+        if (commIndex == -1)
+            return "INVALID_COMMODITY";
+
+        int maxMonth = 0;
+        int maxProfit = Integer.MIN_VALUE;
+
+        for (int m = 0; m < MONTHS; m++) {
+            int monthTotal = 0;
+            for (int d = 0; d < DAYS; d++) {
+                monthTotal += profitData[m][d][commIndex];
+            }
+            if (monthTotal > maxProfit) {
+                maxProfit = monthTotal;
+                maxMonth = m;
+            }
+        }
+        return months[maxMonth];
     }
 
+    // ========== METHOD 6 ==========
     public static int consecutiveLossDays(String comm) {
-        return 1234;
+        int commIndex = -1;
+        for (int c = 0; c < COMMS; c++) {
+            if (commodities[c].equals(comm)) {
+                commIndex = c;
+                break;
+            }
+        }
+
+        if (commIndex == -1)
+            return -1;
+
+        int maxStreak = 0;
+        int currentStreak = 0;
+
+        for (int m = 0; m < MONTHS; m++) {
+            for (int d = 0; d < DAYS; d++) {
+                if (profitData[m][d][commIndex] < 0) {
+                    currentStreak++;
+                    if (currentStreak > maxStreak)
+                        maxStreak = currentStreak;
+                } else {
+                    currentStreak = 0;
+                }
+            }
+        }
+        return maxStreak;
     }
 
+    // ========== METHOD 7 ==========
     public static int daysAboveThreshold(String comm, int threshold) {
-        return 1234;
+        int commIndex = -1;
+        for (int c = 0; c < COMMS; c++) {
+            if (commodities[c].equals(comm)) {
+                commIndex = c;
+                break;
+            }
+        }
+
+        if (commIndex == -1)
+            return -1;
+
+        int count = 0;
+
+        for (int m = 0; m < MONTHS; m++) {
+            for (int d = 0; d < DAYS; d++) {
+                if (profitData[m][d][commIndex] > threshold)
+                    count++;
+            }
+        }
+        return count;
     }
+
+    // ========== METHODS 8-10 (not implemented yet) ==========
 
     public static int biggestDailySwing(int month) {
         return 1234;
